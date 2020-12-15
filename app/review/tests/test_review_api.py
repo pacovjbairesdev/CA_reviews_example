@@ -14,9 +14,9 @@ REVIEW_URL = reverse('review')
 def create_dummy_review(user, title='Review 1'):
     """Simple function for creating reviews of a user"""
     review = Review.objects.create(
-                user=user,
-                rating=rating,
+                reviewer=user,
                 title=title,
+                rating=rating,
                 summary='This is my first review!!!',
                 ip='190.190.190.1',
                 company='Test Company',
@@ -89,9 +89,52 @@ class PrivateReviewApiTests(TestCase):
 
         self.assertTrue(exists)
 
-    def test_create_review_invalid(self):
-        """Test creating invalid Review fails"""
-        payload = {'title': ''}
+    def test_create_review_invalid_title(self):
+        """Test creating Review with invalid title fails"""
+        payload = {
+            'title': '',
+            'rating': 7,
+            'summary': 'This is my first review!!!',
+            'ip': '190.190.190.1',
+            'company': 'Test Company'
+            }
         res = self.client.post(REVIEW_URL, payload)
 
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_create_review_invalid_rating(self):
+        """Test creating Review with invalid rating fails"""
+        payload = {
+            'title': 'Review 1',
+            'rating': 7,
+            'summary': 'This is my first review!!!',
+            'ip': '190.190.190.1',
+            'company': 'Test Company'
+            }
+        res = self.client.post(REVIEW_URL, payload)
+
+        self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
+
+        payload = {
+            'title': 'Review 1',
+            'rating': 0,
+            'summary': 'This is my first review!!!',
+            'ip': '190.190.190.1',
+            'company': 'Test Company'
+            }
+        res = self.client.post(REVIEW_URL, payload)
+
+        self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_create_review_invalid_company(self):
+        """Test creating Review with invalid company fails"""
+        payload = {
+            'title': 'Test 1',
+            'rating': 5,
+            'summary': 'This is my first review!!!',
+            'ip': '190.190.190.1',
+            'company': ''
+            }
+        res = self.client.post(REVIEW_URL, payload)
+
+        self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)s

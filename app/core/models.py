@@ -1,7 +1,8 @@
 from django.db import models
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, \
                                        PermissionsMixin
-# from django.conf import settings
+from django.conf import settings
 
 
 class UserManager(BaseUserManager):
@@ -37,3 +38,22 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
+
+
+class Review(models.Model):
+    """Tag to be used for a recipe"""
+    title = models.CharField(max_length=64)
+    rating = models.IntegerField(
+            validators=[MaxValueValidator(5), MinValueValidator(1)]
+            )
+    summary = models.TextField(max_length=10000)
+    ip = models.CharField(max_length=45)
+    submission_date = models.DateTimeField(auto_now_add=True)
+    company = models.CharField(max_length=255)
+    reviewer = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+    )
+
+    def __str__(self):
+        return self.title

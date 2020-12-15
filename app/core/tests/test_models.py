@@ -52,12 +52,12 @@ class ModelTests(TestCase):
         """Test the review model string representation"""
         user1 = sample_user()
         review = models.Review.objects.create(
-                    user=user1,
+                    reviewer=user1,
                     rating=5,
                     title='Review 1',
                     summary='This is my first review!!!',
                     ip='190.190.190.1',
-                    company='Test Company',
+                    company='Test Company'
                     )
 
         self.assertEqual(str(review), review.title)

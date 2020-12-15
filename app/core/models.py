@@ -1,8 +1,10 @@
 from django.db import models
+from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, \
                                        PermissionsMixin
 from django.conf import settings
+from django.utils.translation import gettext as _
 
 
 class UserManager(BaseUserManager):
@@ -55,5 +57,13 @@ class Review(models.Model):
         on_delete=models.CASCADE,
     )
 
+    def clean(self):
+        """Validation for title, summary and company fields"""
+        if self.title is None or self.title == '':
+            raise ValidationError(_('Review needs a title!'))
+        if self.company is None or self.company == '':
+            raise ValidationError(_('Review needs a company!'))
+
     def __str__(self):
+        """Method for transforming review into string"""
         return self.title

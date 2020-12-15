@@ -6,17 +6,18 @@ from rest_framework import status
 from rest_framework.test import APIClient
 
 from core.models import Review
-from recipe.serializers import ReviewSerializer
+from review.serializers import ReviewSerializer
 
 
-REVIEW_URL = reverse('review')
+REVIEW_URL = reverse('review:review-list')
+
 
 def create_dummy_review(user, title='Review 1'):
     """Simple function for creating reviews of a user"""
     review = Review.objects.create(
                 reviewer=user,
                 title=title,
-                rating=rating,
+                rating=5,
                 summary='This is my first review!!!',
                 ip='190.190.190.1',
                 company='Test Company',
@@ -42,7 +43,7 @@ class PrivateReviewApiTests(TestCase):
 
     def setUp(self):
         self.client = APIClient()
-        self.user = ().objects.create_user(
+        self.user = get_user_model().objects.create_user(
             'test@test.com',
             'password'
         )
@@ -51,8 +52,8 @@ class PrivateReviewApiTests(TestCase):
     def test_retrieve_review_list(self):
         """Test retrieving a list of reviews"""
 
-        review1 = create_dummy_review(self.user)
-        review2 = create_dummy_review(self.user,'Review 2')
+        create_dummy_review(self.user)
+        create_dummy_review(self.user, 'Review 2')
 
         res = self.client.get(REVIEW_URL)
 
@@ -64,7 +65,7 @@ class PrivateReviewApiTests(TestCase):
 
     def test_review_limited_to_user(self):
         """Check that Reviews for the authenticated user are returned"""
-        user2 = ().objects.create_user(
+        user2 = get_user_model().objects.create_user(
             'test2@test.com',
             'password2'
         )
@@ -83,7 +84,7 @@ class PrivateReviewApiTests(TestCase):
         review1 = create_dummy_review(self.user)
 
         exists = Review.objects.filter(
-            user=self.user,
+            reviewer=self.user,
             title=review1.title,
         ).exists()
 
@@ -137,4 +138,4 @@ class PrivateReviewApiTests(TestCase):
             }
         res = self.client.post(REVIEW_URL, payload)
 
-        self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)s
+        self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)

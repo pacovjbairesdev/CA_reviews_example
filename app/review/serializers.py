@@ -9,7 +9,7 @@ class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Review
         fields = (
-                 'id', 'title', 'rating',
+                 'id', 'title', 'rating', 'ip',
                  'summary', 'submission_date', 'company'
                  )
-        read_only_fields = ('id', 'submission_date')
+        read_only_fields = ('id', 'submission_date', 'ip')

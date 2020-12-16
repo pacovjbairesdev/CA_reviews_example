@@ -13,9 +13,9 @@ Install the following:
 + Clone https://github.com/pacovjbairesdev/CA_reviews_example.git
 + Go to CA_reviews_example folder in a Shell
 + Execute 
-	> docker build .
-	> docker-compose build
-	> docker-compose up
+	* > docker build .
+	* > docker-compose build
+	* > docker-compose up
 + You can either check the API in a browser or by sending CURL requests
 
 

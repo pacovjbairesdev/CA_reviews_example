@@ -11,7 +11,8 @@ class ReviewViewSet(viewsets.GenericViewSet,
                     mixins.ListModelMixin,
                     mixins.CreateModelMixin
                     ):
-    """Base ViewSet for creating and listing :model:`core.Review` Objects in the database"""
+    """Base ViewSet for creating and listing
+       :model:`core.Review` Objects in the database"""
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
     queryset = Review.objects.all()

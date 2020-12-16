@@ -18,7 +18,8 @@ class CreateTokenView(ObtainAuthToken):
 
 
 class ManageUserView(generics.RetrieveUpdateAPIView):
-    """Viewpoint for checking and updating an authenticated :model:`core.User` profile"""
+    """Viewpoint for checking and updating an authenticated
+       :model:`core.User` profile"""
     serializer_class = UserSerializer
     authentication_classes = (authentication.TokenAuthentication,)
     permission_classes = (permissions.IsAuthenticated,)
